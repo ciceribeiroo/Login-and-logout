@@ -54,24 +54,28 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         //POST : /api/ApplicationUser/Login
-        public async Task<IActionResult> Login(LoginModel model){
-            var user = await _userManager.FindByNameAsync(model.UserName);await _userManager.FindByNameAsync(model.UserName);
-            if(user !=null && await _userManager.CheckPasswordAsync(user, model.Password) ) {
-                 var tokenDescriptor = new SecurityTokenDescriptor{
-                      Subject = new ClaimsIdentity(new Claim[]{
-                          new Claim("UserID", user.Id.ToString())
-                      }),
-                      Expires = DateTime.UtcNow.AddDays(10),
-                      SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
-                 };
-                 var tokenHandler = new JwtSecurityTokenHandler();
-                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                 var token = tokenHandler.WriteToken(securityToken);
-                 return Ok(new {token});
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim("UserID",user.Id.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.WriteToken(securityToken);
+                return Ok(new { token });
             }
-             else
+            else
                 return BadRequest(new { message = "Username or password is incorrect." });
         }
     }
