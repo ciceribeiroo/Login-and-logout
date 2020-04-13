@@ -2,7 +2,7 @@
 
 Usa o de registro pra criar um sistema de autenticação
 
-Problema com a athenticação do token: 401 Unauthorized (Postman)
+Problema com a athenticação do token: 401 Unauthorized (Postman) -> Resolvido
 
 Seguindo a videoaula: https://www.youtube.com/watch?v=s2zJ_g-iQvg
 
